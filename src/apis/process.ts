@@ -2,10 +2,7 @@ import { inject, RoutePlugin, route } from 'spryly';
 import { Request, ResponseObject, ResponseToolkit } from '@hapi/hapi';
 import { badRequest as boom_badRequest } from '@hapi/boom';
 import { ProcessorService } from '../services/processor';
-import {
-    INliProcessorRequest,
-    IDomainProcessorRequest
-} from 'loopbox-types';
+import { IDomainProcessorRequest, INliProcessorRequest } from '../types/chaosTypes';
 
 export class ProcessRoutes extends RoutePlugin {
     @inject('processor')

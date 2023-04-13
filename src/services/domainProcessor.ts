@@ -2,10 +2,7 @@ import { service, inject } from 'spryly';
 import { Server } from '@hapi/hapi';
 import { ConfigService } from './config';
 import * as Wreck from '@hapi/wreck';
-import {
-    IDomainProcessorRequest,
-    IDomainProcessorResponse
-} from 'loopbox-types';
+import { IDomainProcessorRequest, IDomainProcessorResponse } from '../types/chaosTypes';
 
 @service('domainProcessor')
 export class DomainProcessorService {

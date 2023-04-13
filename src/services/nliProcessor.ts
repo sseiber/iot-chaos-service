@@ -2,10 +2,7 @@ import { service, inject } from 'spryly';
 import { Server } from '@hapi/hapi';
 import { ConfigService } from './config';
 import * as Wreck from '@hapi/wreck';
-import {
-    INliProcessorRequest,
-    INliProcessorResponse
-} from 'loopbox-types';
+import { INliProcessorRequest, INliProcessorResponse } from '../types/chaosTypes';
 
 @service('nliProcessor')
 export class NliProcessorService {

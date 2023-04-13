@@ -3,6 +3,7 @@ import { Server, Request, ResponseToolkit, ResponseObject } from '@hapi/hapi';
 import { AuthService } from '../services/auth';
 import { LoopBoxService } from '../services/loopbox';
 import * as Boom from '@hapi/boom';
+import { IChaosExperiment } from '../types/chaosTypes';
 
 export class LoopBoxRoutes extends RoutePlugin {
     @inject('$server')
@@ -16,7 +17,7 @@ export class LoopBoxRoutes extends RoutePlugin {
 
     @route({
         method: 'GET',
-        path: '/api/v1/loopbox/user/{userId}',
+        path: '/api/v1/loopbox/config/{userId}',
         options: {
             auth: {
                 strategy: 'iotc-session',
@@ -29,39 +30,47 @@ export class LoopBoxRoutes extends RoutePlugin {
                 }
             },
             tags: ['identity'],
-            description: 'Get logged in user identity'
+            description: 'Get user experiments'
         }
     })
-    public async getLoopBoxesForUser(request: Request, _h: ResponseToolkit): Promise<ResponseObject> {
-        this.server.log(['LoopBoxRoutes', 'info'], 'getLoopBoxesForUser');
+    public async getExperimentsForUser(request: Request, h: ResponseToolkit): Promise<ResponseObject> {
+        this.server.log(['LoopBoxRoutes', 'info'], 'getExperimentsForUser');
 
-        return this.loopbox.getLoopBoxesForUser(request.params.userId);
+        const experiments = await this.loopbox.getExperimentsForUser(request.params.userId);
+
+        return h.response(experiments).code(201);
     }
 
     @route({
         method: 'POST',
-        path: '/api/v1/loopbox/config',
+        path: '/api/v1/loopbox/config/{userId}',
         options: {
-            // auth: {
-            //     strategy: 'iotc-session',
-            //     scope: ['api-client']
-            // },
+            auth: {
+                strategy: 'iotc-session',
+                mode: 'required',
+                scope: ['api-client']
+            },
+            plugins: {
+                'hapi-auth-cookie': {
+                    redirectTo: false
+                }
+            },
             tags: ['identity'],
-            description: 'Create user configuration'
+            description: ' Configure user experiments'
         }
     })
-    public async postCreateConfig(request: Request, h: ResponseToolkit): Promise<ResponseObject> {
+    public async configureExperimentsForUser(request: Request, h: ResponseToolkit): Promise<ResponseObject> {
         this.server.log(['LoopBoxRoutes', 'info'], 'postCreateConfig');
 
-        const claimToken = request.params.claimToken;
-        const userId = (request?.payload as any)?.userId;
+        const userId = request.params.userId;
+        const experiments = request?.payload as IChaosExperiment[];
 
         try {
-            const { loopBox, scope } = await this.loopbox.claimLoopBoxWithToken(claimToken, userId);
+            const scope = await this.loopbox.configureExperimentsForUser(userId, experiments);
 
             this.auth.setSessionScope(request, userId, scope);
 
-            return h.response(loopBox).code(201);
+            return h.response().code(201);
         }
         catch (error) {
             throw Boom.badRequest(error.message);

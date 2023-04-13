@@ -3,18 +3,16 @@ import { Server } from '@hapi/hapi';
 import { ConfigService } from './config';
 import { CosmosDBContainer } from '../models/cosmosDbContainer';
 import { CosmosClient, Database } from '@azure/cosmos';
-import { LoopBox } from '../models/loopBox';
-import { LoopBoxUser } from '../models/loopBoxUser';
-import { LoopBoxClaimToken } from '../models/loopBoxClaimToken';
+import { DbExperiment } from '../models/experiment';
+import { DbChaosUser } from '../models/chaosUser';
 
 interface IContainerDefs {
     [key: string]: any;
 }
 
 const loopBoxContainerDefs: IContainerDefs = {
-    loopBoxes: LoopBox,
-    loopBoxUsers: LoopBoxUser,
-    loopBoxClaimTokens: LoopBoxClaimToken
+    chaosExperiments: DbExperiment,
+    chaosUsers: DbChaosUser
 };
 
 @service('loopBoxCosmosDb')
@@ -29,16 +27,12 @@ export class LoopBoxCosmosDbService {
     private loopBoxCosmosDb: Database;
     private loopBoxCosmosDbContainers: { [key: string]: CosmosDBContainer };
 
-    public get users(): CosmosDBContainer {
-        return this.loopBoxCosmosDbContainers.loopBoxUsers;
+    public get chaosUsers(): CosmosDBContainer {
+        return this.loopBoxCosmosDbContainers.chaosUsers;
     }
 
-    public get loopBoxes(): CosmosDBContainer {
-        return this.loopBoxCosmosDbContainers.loopBoxes;
-    }
-
-    public get claimTokens(): CosmosDBContainer {
-        return this.loopBoxCosmosDbContainers.loopBoxClaimTokens;
+    public get chaosExperiments(): CosmosDBContainer {
+        return this.loopBoxCosmosDbContainers.chaosExperiments;
     }
 
     public async init(): Promise<void> {

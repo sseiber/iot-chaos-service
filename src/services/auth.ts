@@ -70,12 +70,12 @@ export class AuthService {
         const profile = credentials?.profile;
         const authProvider = (request?.auth?.credentials as any)?.provider || 'unknown';
 
-        let user = await this.loopbox.getLoopBoxUserByAuthProviderId(profile.id);
+        let user = await this.loopbox.getChaosUserByAuthProviderId(profile.id);
         if (!user) {
-            user = await this.loopbox.createLoopBoxUser(profile, authProvider);
+            user = await this.loopbox.createChaosUser(profile, authProvider);
         }
 
-        const scope = user.loopBoxSystems.map((loopBoxSystem: any) => `user-${loopBoxSystem.id}`);
+        const scope = user.experiments.map((experimentId: any) => `user-${experimentId}`);
 
         this.setSessionScope(request, user.id, scope);
 

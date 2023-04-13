@@ -1,12 +1,7 @@
 import { service, inject } from 'spryly';
 import { NliProcessorService } from './nliProcessor';
 import { DomainProcessorService } from './domainProcessor';
-import {
-    INliProcessorRequest,
-    INliProcessorResponse,
-    IDomainProcessorRequest,
-    IDomainProcessorResponse
-} from 'loopbox-types';
+import { INliProcessorRequest, INliProcessorResponse, IDomainProcessorRequest, IDomainProcessorResponse } from '../types/chaosTypes';
 
 @service('processor')
 export class ProcessorService {

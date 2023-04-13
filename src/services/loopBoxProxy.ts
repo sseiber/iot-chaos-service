@@ -1,6 +1,6 @@
 import { service, inject } from 'spryly';
 import { Server } from '@hapi/hapi';
-import { LoopBoxService } from './loopbox';
+// import { LoopBoxService } from './loopbox';
 
 class DeferredPromise {
     public then: any;
@@ -28,8 +28,8 @@ export class LoopBoxProxyService {
     @inject('$server')
     private server: Server;
 
-    @inject('loopbox')
-    private loopbox: LoopBoxService;
+    // @inject('loopbox')
+    // private loopbox: LoopBoxService;
 
     private callbackMap: Map<string, any>;
     private registeredLoopBoxServices: Map<string, any>;
@@ -86,7 +86,7 @@ export class LoopBoxProxyService {
                     return { message: 'LoopBox registeration message missing setupToken' };
                 }
 
-                await this.loopbox.setLoopBoxClaimToken(setupToken, loopBoxId);
+                // await this.loopbox.setLoopBoxClaimToken(setupToken, loopBoxId);
 
                 this.registeredLoopBoxServices.set(loopBoxId, { socket });
                 this.server.log(['clientMessageResponse', 'info'], `New LoopBox registered loopBoxId: ${loopBoxId}`);
@@ -98,23 +98,23 @@ export class LoopBoxProxyService {
             }
         }
 
-        if (messageType === 'updateLoopBoxRegistration') {
-            const loopBoxId = data?.payload?.loopBoxId;
-            const systemName = data?.payload?.systemName;
+        // if (messageType === 'updateLoopBoxRegistration') {
+        //     const loopBoxId = data?.payload?.loopBoxId;
+        //     const systemName = data?.payload?.systemName;
 
-            if (!loopBoxId || !systemName) {
-                return { message: 'LoopBox updateLoopBoxRegistration message missing loopBoxId or systemName param' };
-            }
+        //     if (!loopBoxId || !systemName) {
+        //         return { message: 'LoopBox updateLoopBoxRegistration message missing loopBoxId or systemName param' };
+        //     }
 
-            try {
-                await this.loopbox.updateLoopBoxRegistration(loopBoxId, systemName);
+        //     try {
+        //         await this.loopbox.updateLoopBoxRegistration(loopBoxId, systemName);
 
-                return { message: `Success updated registration for LoopBox id: ${loopBoxId}` };
-            }
-            catch (error) {
-                return { message: error.message };
-            }
-        }
+        //         return { message: `Success updated registration for LoopBox id: ${loopBoxId}` };
+        //     }
+        //     catch (error) {
+        //         return { message: error.message };
+        //     }
+        // }
 
         throw new Error(`Unknown client message type: ${data.type}`);
     }

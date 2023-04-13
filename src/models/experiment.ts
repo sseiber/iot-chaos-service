@@ -2,15 +2,14 @@ import { Server } from '@hapi/hapi';
 import { Database } from '@azure/cosmos';
 import { CosmosDBContainer } from './cosmosDbContainer';
 
-export interface ILoopBoxUser {
+export interface IDbExperiment {
     id: string;
-    provider: string;
-    displayName: string;
-    email: string;
-    loopBoxSystems: string[];
+    active: boolean;
+    name: string;
+    description: string;
 }
 
-export class LoopBoxUser extends CosmosDBContainer {
+export class DbExperiment extends CosmosDBContainer {
     constructor(cosmosDb: Database, containerDef: any, server: Server) {
         super(cosmosDb, containerDef, server);
     }
