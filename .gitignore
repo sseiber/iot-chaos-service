@@ -146,7 +146,6 @@ test-dist*
 test-browser
 typings
 typedoc
-types
 es
 sdk/cosmosdb/cosmos/lib
 *.test.js
