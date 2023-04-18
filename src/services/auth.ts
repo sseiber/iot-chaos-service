@@ -64,15 +64,14 @@ export class AuthService {
         this.azureADClientIdInternal = this.config.get('authChaosClientClientId');
     }
 
-    public async providerSignin(request: Request, credentials: any): Promise<void> {
+    public async providerSignin(request: Request): Promise<void> {
         this.server.log([ModuleName, 'info'], 'providerSignin');
 
-        const profile = credentials?.profile;
-        const authProvider = (request?.auth?.credentials as any)?.provider || 'unknown';
+        const credentials = request?.auth?.credentials as any;
 
-        let user = await this.loopbox.getChaosUserByAuthProviderId(profile.id);
+        let user = await this.loopbox.getChaosUserByAuthProviderId(credentials?.profile.id);
         if (!user) {
-            user = await this.loopbox.createChaosUser(profile, authProvider);
+            user = await this.loopbox.createChaosUser(credentials);
         }
 
         const scope = user.experiments.map((experimentId: any) => `user-${experimentId}`);

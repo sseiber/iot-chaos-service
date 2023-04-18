@@ -35,22 +35,20 @@ export class AuthRoutes extends RoutePlugin {
         const auth = request.auth;
 
         if (!auth || !auth.isAuthenticated) {
-            const errorMessage = (request as any)?.auth?.error?.message || 'unknown';
+            const errorMessage = auth?.error?.message || 'unknown';
             this.server.log([ModuleName, 'error'], `providerSignin error: ${errorMessage}`);
 
             throw boomUnauthorized(`Sign in auth check failed: ${errorMessage}`);
         }
 
-        const credentials = auth?.credentials;
-
-        if (!credentials || !auth?.isAuthenticated) {
+        if (!auth?.credentials || !auth?.isAuthenticated) {
             this.server.log([ModuleName, 'error'], 'providerSignin error: auth check failed: missing credentials');
 
             throw boomUnauthorized('Sign in failed, please verify the credentials are correct...');
         }
 
         try {
-            await this.auth.providerSignin(request, credentials);
+            await this.auth.providerSignin(request);
 
             const queryParams = qsStringify({
                 ...(auth as any)?.credentials?.query
@@ -128,7 +126,7 @@ export class AuthRoutes extends RoutePlugin {
     public async getUserProfile(request: Request, h: ResponseToolkit): Promise<ResponseObject> {
         this.server.log([ModuleName, 'info'], 'getUserProfile');
 
-        const profile: any = request?.auth?.credentials.profile;
+        const profile: any = request?.auth?.credentials?.profile;
         if (!profile || !request.auth?.isAuthenticated) {
             throw boomUnauthorized();
         }

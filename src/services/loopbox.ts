@@ -135,23 +135,25 @@ export class LoopBoxService {
         };
     }
 
-    public async getChaosUserByAuthProviderId(userId: string): Promise<any> {
+    public async getChaosUserByAuthProviderId(authProviderId: string): Promise<any> {
         const querySpec = {
             query: 'SELECT * FROM chaosUsers u WHERE u.authProviderId = @authProviderId',
             parameters: [{
                 name: '@authProviderId',
-                value: userId
+                value: authProviderId
             }]
         };
 
         return this.loopBoxCosmosDb.chaosUsers.getDocumentWithQuery(querySpec);
     }
 
-    public async createChaosUser(profile: any, authProvider: string): Promise<any> {
+    public async createChaosUser(credentials: any): Promise<any> {
+        const profile = credentials?.profile as any;
+
         return this.loopBoxCosmosDb.chaosUsers.createDocument({
             id: uuidV4(),
             authProviderId: profile.id,
-            authProvider,
+            authProvider: credentials.provider || 'unknown',
             displayName: profile.displayName,
             email: profile.email,
             experiments: []
