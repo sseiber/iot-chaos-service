@@ -1,6 +1,6 @@
 {
     "name": "iot-chaos-service",
-    "version": "3.0.31",
+    "version": "3.0.32",
     "description": "IoT chaos service",
     "main": "index.js",
     "scripts": {
