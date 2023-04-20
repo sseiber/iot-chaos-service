@@ -41,7 +41,7 @@ export class AuthRoutes extends RoutePlugin {
             throw boomUnauthorized(`Sign in auth check failed: ${errorMessage}`);
         }
 
-        if (!auth?.credentials || !auth?.isAuthenticated) {
+        if (!auth?.credentials) {
             this.server.log([ModuleName, 'error'], 'providerSignin error: auth check failed: missing credentials');
 
             throw boomUnauthorized('Sign in failed, please verify the credentials are correct...');
