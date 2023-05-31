@@ -74,7 +74,8 @@ export class AuthService {
             user = await this.loopbox.createChaosUser(credentials);
         }
 
-        const scope = user.experiments.map((experimentId: any) => `user-${experimentId}`);
+        // const scope = user.experiments.map((experimentId: any) => `user-${experimentId}`);
+        const scope: string[] = [];
 
         this.setSessionScope(request, user.id, scope);
 
